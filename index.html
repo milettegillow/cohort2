@@ -1,394 +1,469 @@
 <!doctype html>
 <html lang="en-GB">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex, nofollow">
-<title>the tech bros - Cohort 2</title>
-<style>
-  /* ---------- base ---------- */
-  * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  :root {
-    --pink: #ef1f9f;
-    --grey: #ededed;
-    --pinktint: #fde4f4;
-    --sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-  body {
-    font-family: var(--sans);
-    color: #000000;
-    background: #ffffff;
-    line-height: 1.45;
-    -webkit-font-smoothing: antialiased;
-  }
-  a { color: var(--pink); }
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>the tech bros - Cohort 2</title>
+    <style>
+      /* ---------- base ---------- */
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --pink: #ef1f9f;
+        --grey: #ededed;
+        --pinktint: #fde4f4;
+        --sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      body {
+        font-family: var(--sans);
+        color: #000000;
+        background: #ffffff;
+        line-height: 1.45;
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: var(--pink);
+      }
 
-  /* squared corners everywhere */
-  input, button { border-radius: 0; }
+      /* squared corners everywhere */
+      input,
+      button {
+        border-radius: 0;
+      }
 
-  /* ---------- wordmark ---------- */
-  .wordmark {
-    font-family: var(--sans);
-    letter-spacing: -0.06em;
-    font-weight: 400;
-    text-transform: lowercase;
-    line-height: 1;
-    margin: 0;
-  }
+      /* ---------- wordmark ---------- */
+      .wordmark {
+        font-family: var(--sans);
+        letter-spacing: -0.06em;
+        font-weight: 400;
+        text-transform: lowercase;
+        line-height: 1;
+        margin: 0;
+      }
 
-  /* ---------- password gate ---------- */
-  #gate {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    background: #ffffff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 24px;
-  }
-  #gate .wordmark { font-size: 34px; }
-  #gate .gate-sub {
-    margin: 10px 0 28px;
-    font-size: 14px;
-    letter-spacing: 0.02em;
-  }
-  #gate form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    width: 100%;
-    max-width: 300px;
-  }
-  #gate input {
-    font-family: var(--sans);
-    font-size: 16px;
-    padding: 13px 12px;
-    border: 1px solid #000000;
-    background: #ffffff;
-    color: #000000;
-    width: 100%;
-  }
-  #gate input:focus { outline: 2px solid var(--pink); outline-offset: -1px; }
-  .btn {
-    font-family: var(--sans);
-    font-size: 15px;
-    letter-spacing: 0.01em;
-    padding: 13px 18px;
-    border: none;
-    background: var(--pink);
-    color: #ffffff;
-    cursor: pointer;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-  }
-  .btn:hover { opacity: 0.9; }
-  #gate-error {
-    color: var(--pink);
-    font-size: 13px;
-    min-height: 16px;
-    margin: 0;
-  }
+      /* ---------- password gate ---------- */
+      #gate {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        background: #ffffff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 24px;
+      }
+      #gate .wordmark {
+        font-size: 34px;
+      }
+      #gate .gate-sub {
+        margin: 10px 0 28px;
+        font-size: 14px;
+        letter-spacing: 0.02em;
+      }
+      #gate form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        width: 100%;
+        max-width: 300px;
+      }
+      #gate input {
+        font-family: var(--sans);
+        font-size: 16px;
+        padding: 13px 12px;
+        border: 1px solid #000000;
+        background: #ffffff;
+        color: #000000;
+        width: 100%;
+      }
+      #gate input:focus {
+        outline: 2px solid var(--pink);
+        outline-offset: -1px;
+      }
+      .btn {
+        font-family: var(--sans);
+        font-size: 15px;
+        letter-spacing: 0.01em;
+        padding: 13px 18px;
+        border: none;
+        background: var(--pink);
+        color: #ffffff;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+      }
+      .btn:hover {
+        opacity: 0.9;
+      }
+      #gate-error {
+        color: var(--pink);
+        font-size: 13px;
+        min-height: 16px;
+        margin: 0;
+      }
 
-  /* ---------- site (revealed after gate) ---------- */
-  #site { display: none; }
-  .wrap {
-    max-width: 1040px;
-    margin: 0 auto;
-    padding: 22px 16px 60px;
-  }
+      /* ---------- site (revealed after gate) ---------- */
+      #site {
+        display: none;
+      }
+      .wrap {
+        max-width: 1040px;
+        margin: 0 auto;
+        padding: 22px 16px 60px;
+      }
 
-  /* header */
-  header .wordmark { font-size: 26px; }
-  .cohort-big {
-    font-size: 56px;
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    margin: 6px 0 14px;
-    line-height: 0.95;
-  }
-  .intro {
-    font-size: 16px;
-    max-width: 640px;
-    margin: 0;
-  }
+      /* header */
+      header .wordmark {
+        font-size: 26px;
+      }
+      .cohort-big {
+        font-size: 56px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        margin: 6px 0 14px;
+        line-height: 0.95;
+      }
+      .intro {
+        font-size: 16px;
+        max-width: 640px;
+        margin: 0;
+      }
 
-  /* checklist card */
-  .checklist {
-    border: 1px solid var(--pink);
-    border-top: 6px solid var(--pink);
-    padding: 20px 20px 22px;
-    margin: 30px 0 34px;
-  }
-  .checklist h2 {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--pink);
-    margin: 0 0 14px;
-  }
-  .checklist ul {
-    list-style: none;
-    margin: 0 0 14px;
-    padding: 0;
-  }
-  .checklist li {
-    position: relative;
-    padding-left: 26px;
-    margin-bottom: 12px;
-    font-size: 15px;
-  }
-  .checklist li::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 3px;
-    width: 13px;
-    height: 13px;
-    border: 1px solid var(--pink);
-  }
-  .checklist .jump {
-    font-size: 14px;
-    font-weight: 700;
-  }
+      /* checklist card */
+      .checklist {
+        border: 1px solid var(--pink);
+        border-top: 6px solid var(--pink);
+        padding: 20px 20px 22px;
+        margin: 30px 0 34px;
+      }
+      .checklist h2 {
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--pink);
+        margin: 0 0 14px;
+      }
+      .checklist ul {
+        list-style: none;
+        margin: 0 0 14px;
+        padding: 0;
+      }
+      .checklist li {
+        position: relative;
+        padding-left: 26px;
+        margin-bottom: 12px;
+        font-size: 15px;
+      }
+      .checklist li::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 3px;
+        width: 13px;
+        height: 13px;
+        border: 1px solid var(--pink);
+      }
+      .checklist .jump {
+        font-size: 14px;
+        font-weight: 700;
+      }
 
-  /* section headings */
-  .section-head {
-    font-size: 22px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin: 40px 0 6px;
-  }
-  .section-intro {
-    font-size: 15px;
-    margin: 0 0 18px;
-    max-width: 640px;
-  }
+      /* section headings */
+      .section-head {
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 40px 0 6px;
+      }
+      .section-intro {
+        font-size: 15px;
+        margin: 0 0 18px;
+        max-width: 640px;
+      }
 
-  /* gallery toolbar */
-  .gallery-tools {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin: 0 0 14px;
-  }
-  .hint {
-    font-size: 13px;
-    color: #000000;
-    margin: 12px 0 0;
-  }
+      /* gallery toolbar */
+      .gallery-tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 12px;
+        margin: 0 0 14px;
+      }
+      .hint {
+        font-size: 13px;
+        color: #000000;
+        margin: 12px 0 0;
+      }
 
-  /* ---------- mosaic gallery ---------- */
-  .gallery {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-flow: dense;
-    gap: 9px;
-  }
-  @media (min-width: 641px) {
-    .gallery { grid-template-columns: repeat(4, 1fr); }
-  }
+      /* ---------- mosaic gallery ---------- */
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-auto-flow: dense;
+        gap: 9px;
+      }
+      @media (min-width: 641px) {
+        .gallery {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
 
-  .tile { position: relative; overflow: hidden; }
+      .tile {
+        position: relative;
+        overflow: hidden;
+      }
 
-  /* photo tiles are square */
-  .tile.photo { aspect-ratio: 1 / 1; }
-  .tile.photo.grey { background: var(--grey); }
-  .tile.photo.pink { background: var(--pinktint); }
-  .tile.photo a { display: block; width: 100%; height: 100%; }
-  .tile.photo img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+      /* photo tiles are square */
+      .tile.photo {
+        aspect-ratio: 1 / 1;
+      }
+      .tile.photo.grey {
+        background: var(--grey);
+      }
+      .tile.photo.pink {
+        background: var(--pinktint);
+      }
+      .tile.photo a {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .tile.photo img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
 
-  /* featured photo: 2x2 */
-  .tile.featured { grid-column: span 2; grid-row: span 2; }
+      /* featured photo: 2x2 */
+      .tile.featured {
+        grid-column: span 2;
+        grid-row: span 2;
+      }
 
-  /* caption tiles: 2x2 footprint, fixed-ish height with internal scroll */
-  .tile.caption {
-    grid-column: span 2;
-    grid-row: span 2;
-    border: 1px solid #000000;
-    display: flex;
-    flex-direction: column;
-    background: #ffffff;
-    overflow: hidden;
-  }
-  .caption-scroll {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    padding: 12px 14px 40px;
-  }
-  .copy-bar {
-    position: sticky;
-    top: 0;
-    display: flex;
-    justify-content: flex-end;
-    background: #ffffff;
-    padding-bottom: 6px;
-    margin: -12px -14px 4px;
-    padding-top: 12px;
-    padding-right: 14px;
-  }
-  .copy-btn {
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 700;
-    padding: 7px 14px;
-    border: none;
-    background: var(--pink);
-    color: #ffffff;
-    cursor: pointer;
-  }
-  .copy-btn.copied { background: #ffffff; color: var(--pink); border: 1px solid var(--pink); }
-  .caption-text {
-    white-space: pre-wrap;
-    font-size: 14.5px;
-    line-height: 1.5;
-    margin: 0;
-  }
-  .city-note {
-    font-size: 12px;
-    color: var(--pink);
-    margin-top: 12px;
-  }
-  /* subtle fade at the bottom edge to hint at more text */
-  .tile.caption .fade {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 44px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), #ffffff);
-    pointer-events: none;
-    transition: opacity 0.15s;
-  }
-  .tile.caption .fade.hidden { opacity: 0; }
+      /* caption tiles: 2x2 footprint, fixed-ish height with internal scroll */
+      .tile.caption {
+        grid-column: span 2;
+        grid-row: span 2;
+        border: 1px solid #000000;
+        display: flex;
+        flex-direction: column;
+        background: #ffffff;
+        overflow: hidden;
+      }
+      .caption-scroll {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 12px 14px 40px;
+      }
+      .copy-bar {
+        position: sticky;
+        top: 0;
+        display: flex;
+        justify-content: flex-end;
+        background: #ffffff;
+        padding-bottom: 6px;
+        margin: -12px -14px 4px;
+        padding-top: 12px;
+        padding-right: 14px;
+      }
+      .copy-btn {
+        font-family: var(--sans);
+        font-size: 13px;
+        font-weight: 700;
+        padding: 7px 14px;
+        border: none;
+        background: var(--pink);
+        color: #ffffff;
+        cursor: pointer;
+      }
+      .copy-btn.copied {
+        background: #ffffff;
+        color: var(--pink);
+        border: 1px solid var(--pink);
+      }
+      .caption-text {
+        white-space: pre-wrap;
+        font-size: 14.5px;
+        line-height: 1.5;
+        margin: 0;
+      }
+      .city-note {
+        font-size: 12px;
+        color: var(--pink);
+        margin-top: 12px;
+      }
+      /* subtle fade at the bottom edge to hint at more text */
+      .tile.caption .fade {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 44px;
+        background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+        pointer-events: none;
+        transition: opacity 0.15s;
+      }
+      .tile.caption .fade.hidden {
+        opacity: 0;
+      }
 
-  /* ---------- keep-posting list ---------- */
-  .prompts {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-width: 640px;
-  }
-  .prompts li {
-    border-top: 1px solid var(--grey);
-    padding: 12px 0;
-    font-size: 16px;
-  }
-  .prompts li:last-child { border-bottom: 1px solid var(--grey); }
+      /* ---------- keep-posting list ---------- */
+      .prompts {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        max-width: 640px;
+      }
+      .prompts li {
+        border-top: 1px solid var(--grey);
+        padding: 12px 0;
+        font-size: 16px;
+      }
+      .prompts li:last-child {
+        border-bottom: 1px solid var(--grey);
+      }
 
-  /* ---------- footer ---------- */
-  footer {
-    border-top: 1px solid #000000;
-    margin-top: 54px;
-    padding-top: 20px;
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-  }
-  footer .wordmark { font-size: 18px; }
-  footer .fc { font-size: 14px; }
+      /* ---------- footer ---------- */
+      footer {
+        border-top: 1px solid #000000;
+        margin-top: 54px;
+        padding-top: 20px;
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+      }
+      footer .wordmark {
+        font-size: 18px;
+      }
+      footer .fc {
+        font-size: 14px;
+      }
 
-  @media (max-width: 640px) {
-    .cohort-big { font-size: 44px; }
-  }
-</style>
-</head>
-<body>
-
-<!-- ============ PASSWORD GATE ============ -->
-<div id="gate">
-  <p class="wordmark">the tech bros</p>
-  <p class="gate-sub">Cohort 2 - members only</p>
-  <form id="gate-form">
-    <input id="gate-input" type="password" placeholder="Password" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password">
-    <button class="btn" type="submit">Enter</button>
-    <p id="gate-error" aria-live="polite"></p>
-  </form>
-</div>
-
-<!-- ============ SITE ============ -->
-<main id="site">
-  <div class="wrap">
-
-    <!-- 1. header -->
-    <header>
+      @media (max-width: 640px) {
+        .cohort-big {
+          font-size: 44px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ============ PASSWORD GATE ============ -->
+    <div id="gate">
       <p class="wordmark">the tech bros</p>
-      <h1 class="cohort-big">Cohort 2</h1>
-      <p class="intro">Everything you need for your announcement. Grab a caption, grab a photo or two, post Monday.</p>
-    </header>
-
-    <!-- 2. drop checklist -->
-    <section class="checklist">
-      <h2>Before you post</h2>
-      <ul>
-        <li>Post Monday at 9:00am Norway time (CEST)</li>
-        <li>Tag The Tech Bros page: linkedin.com/company/thetechbros (type @ and select it so it links)</li>
-        <li>Hashtags are already included when you copy a caption</li>
-        <li>Pick a caption below, and a photo or two</li>
-      </ul>
-      <a class="jump" href="#first-caption">jump to captions</a>
-    </section>
-
-    <!-- 3. mosaic gallery -->
-    <h2 class="section-head">The gallery</h2>
-    <div class="gallery-tools">
-      <a class="btn" href="photos/all.zip">Download all (best on desktop)</a>
+      <p class="gate-sub">Cohort 2 - members only</p>
+      <form id="gate-form">
+        <input
+          id="gate-input"
+          type="password"
+          placeholder="Password"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          aria-label="Password"
+        />
+        <button class="btn" type="submit">Enter</button>
+        <p id="gate-error" aria-live="polite"></p>
+      </form>
     </div>
-    <div id="gallery" class="gallery"></div>
-    <p class="hint">Tap a photo to open it full size, then save it (long-press on mobile).</p>
 
-    <!-- 4. keep posting -->
-    <h2 class="section-head">Keep posting through the accelerator</h2>
-    <p class="section-intro">Building in public compounds. Easy things to post over the coming weeks:</p>
-    <ul class="prompts">
-      <li>Daily diary of the accelerator</li>
-      <li>A lesson you learned this week</li>
-      <li>Behind the scenes of what you're building</li>
-      <li>A milestone you hit</li>
-      <li>A founder or investor you met</li>
-      <li>An ask-me-anything about your founder journey</li>
-    </ul>
+    <!-- ============ SITE ============ -->
+    <main id="site">
+      <div class="wrap">
+        <!-- 1. header -->
+        <header>
+          <p class="wordmark">the tech bros</p>
+          <h1 class="cohort-big">Cohort 2</h1>
+          <p class="intro">
+            Everything you need for our cohort announcement post on Monday 🚀
+          </p>
+        </header>
 
-    <!-- 5. footer -->
-    <footer>
-      <span class="wordmark">the tech bros</span>
-      <span class="fc">Cohort 2</span>
-    </footer>
+        <!-- 2. drop checklist -->
+        <section class="checklist">
+          <h2>Before you post</h2>
+          <ul>
+            <li>Post Monday at 9:00am Norway time (CEST)</li>
+            <li>
+              Tag The Tech Bros LinkedIn page:
+              <a
+                href="https://www.linkedin.com/company/thetechbros"
+                target="_blank"
+                rel="noopener"
+                >linkedin.com/company/thetechbros</a
+              >
+            </li>
+            <li>
+              We've included a few suggested captions below - feel free to
+              tweak, or create your own!
+            </li>
+          </ul>
+        </section>
 
-  </div>
-</main>
+        <!-- 3. mosaic gallery -->
+        <h2 class="section-head">The gallery</h2>
+        <div class="gallery-tools">
+          <a class="btn" href="photos/all.zip"
+            >Download all (best on desktop)</a
+          >
+        </div>
+        <div id="gallery" class="gallery"></div>
+        <p class="hint">
+          Tap a photo to open it full size, then save it (long-press on mobile).
+        </p>
 
-<script>
-/* =========================================================================
+        <!-- 4. keep posting -->
+        <h2 class="section-head">Keep posting throughout the accelerator</h2>
+        <ul class="prompts">
+          <li>Daily diary</li>
+          <li>An insight you learned this week</li>
+          <li>Behind the scenes of what you're building</li>
+          <li>A milestone you hit</li>
+          <li>A skit e.g. "expectations vs reality"</li>
+        </ul>
+
+        <!-- 5. footer -->
+        <footer>
+          <span class="wordmark">the tech bros</span>
+          <span class="fc">Cohort 2</span>
+        </footer>
+      </div>
+    </main>
+
+    <script>
+      /* =========================================================================
    EASY TO EDIT - non-developers, change the three things below.
    ========================================================================= */
 
-// 1) PASSWORD: change this to the real password before sharing the link.
-const PASSWORD = "bros-go-north";
+      // 1) PASSWORD: change this to the real password before sharing the link.
+      const PASSWORD = "bros-go-north";
 
-// 2) HASHTAGS: appended (on a new line) to every caption you copy.
-const HASHTAGS = "#TheTechBrosCohort2 #WomenInTech #WomenInSTEM #FemaleFounders #Accelerator";
+      // 2) HASHTAGS: appended (on a new line) to every caption you copy.
+      const HASHTAGS =
+        "#TheTechBrosCohort2 #WomenInTech #WomenInSTEM #FemaleFounders #Accelerator";
 
-// 3) TILES: the single ordered source of truth for the gallery.
-//    - Photos: leave src as "" for a placeholder, or paste a full-size photo URL.
-//    - featured: true makes a photo a big 2x2 square.
-//    - Caption tiles hold the post text (keep the line breaks as they are).
-const TILES = [
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: true },
-  { type: "caption", text: `I'm part of The Tech Bros Cohort 2 🔥
+      // 3) TILES: the single ordered source of truth for the gallery.
+      //    - Photos: leave src as "" for a placeholder, or paste a full-size photo URL.
+      //    - featured: true makes a photo a big 2x2 square.
+      //    - Caption tiles hold the post text (keep the line breaks as they are).
+      const TILES = [
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: true },
+        {
+          type: "caption",
+          text: `I'm part of The Tech Bros Cohort 2 🔥
 
 The Tech Bros are the world's first all-female, all-technical accelerator.
 
@@ -398,36 +473,45 @@ That's a 7.4% selection rate. More competitive than Oxford and Cambridge.
 
 I'll be spending the next two weeks building from our hacker house in Norway 🏔️ And then the following 6 weeks building from [city] and participating in hybrid sessions with top tier founders and investors ❤️‍🔥
 
-See you at demo day! 🚀` },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: true },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "caption", text: `SO EXCITED to officially announce that I've been accepted into The Tech Bros Accelerator Cohort 2 🚀
+See you at demo day! 🚀`,
+        },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: true },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        {
+          type: "caption",
+          text: `SO EXCITED to officially announce that I've been accepted into The Tech Bros Accelerator Cohort 2 🚀
 
 20 technical women selected from 270+ applicants to participate in an all-expenses-paid hacker house in the Norwegian mountains for the next 2 weeks + 6-week hybrid programme + demo day!!
 
-Can't wait to share my journey as a founder over the coming weeks - stay tuned for more updates 👀` },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: true },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "caption", text: `The Tech Bros Cohort 2, here we go!!!
+Can't wait to share my journey as a founder over the coming weeks - stay tuned for more updates 👀`,
+        },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: true },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        {
+          type: "caption",
+          text: `The Tech Bros Cohort 2, here we go!!!
 
 Posting this from our cabin in the Norwegian mountains ✌️🏔️🇳🇴
 
-Can't think of a better way to connect with 20 badass women building tech startups. See you on the other side!` },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: true },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "caption", text: `Excited to announce that I've joined The Tech Bros Cohort 2 as a founder in residence!
+Can't think of a better way to connect with 20 badass women building tech startups. See you on the other side!`,
+        },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: true },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        {
+          type: "caption",
+          text: `Excited to announce that I've joined The Tech Bros Cohort 2 as a founder in residence!
 
 🔥 20 women in STEM selected from over 270 applicants
 🏔️ 2-week hacker house in the Norwegian mountains
@@ -437,165 +521,186 @@ Can't think of a better way to connect with 20 badass women building tech startu
 
 Stay tuned to follow along my founding journey.
 
-Let's gooooooo!!!!` },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: true },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: false },
-  { type: "caption", text: `I'M IN The Tech Bros COHORT 2!!!!!!!
+Let's gooooooo!!!!`,
+        },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: true },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        {
+          type: "caption",
+          text: `I'M IN The Tech Bros COHORT 2!!!!!!!
 
 💕 The world's first all-female, all-technical accelerator
 🏔️ 2-week hacker house in the Norwegian mountains + 6-week hybrid programme + demo day
 😳 270+ applicants for only 20 spots (7.4% selection rate, more competitive than Oxford and Cambridge)
 
-LFG 🚀🚀🚀` },
-  { type: "photo", src: "", featured: false },
-  { type: "photo", src: "", featured: true },
-  { type: "photo", src: "", featured: false },
-];
+LFG 🚀🚀🚀`,
+        },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: true },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+        { type: "photo", src: "", featured: false },
+      ];
 
-/* =========================================================================
+      /* =========================================================================
    Below here is the machinery. You should not need to edit it.
    ========================================================================= */
 
-/* ---- password gate ---- */
-const gate = document.getElementById('gate');
-const site = document.getElementById('site');
-const gateForm = document.getElementById('gate-form');
-const gateInput = document.getElementById('gate-input');
-const gateError = document.getElementById('gate-error');
+      /* ---- password gate ---- */
+      const gate = document.getElementById("gate");
+      const site = document.getElementById("site");
+      const gateForm = document.getElementById("gate-form");
+      const gateInput = document.getElementById("gate-input");
+      const gateError = document.getElementById("gate-error");
 
-function reveal() {
-  gate.style.display = 'none';
-  site.style.display = 'block';
-}
+      function reveal() {
+        gate.style.display = "none";
+        site.style.display = "block";
+      }
 
-if (sessionStorage.getItem('ttb-c2-auth') === 'ok') {
-  reveal();
-} else {
-  gateInput.focus();
-}
+      if (sessionStorage.getItem("ttb-c2-auth") === "ok") {
+        reveal();
+      } else {
+        gateInput.focus();
+      }
 
-gateForm.addEventListener('submit', function (e) {
-  e.preventDefault();
-  if (gateInput.value === PASSWORD) {
-    sessionStorage.setItem('ttb-c2-auth', 'ok');
-    reveal();
-  } else {
-    gateError.textContent = 'Wrong password, try again.';
-    gateInput.value = '';
-    gateInput.focus();
-  }
-});
+      gateForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (gateInput.value === PASSWORD) {
+          sessionStorage.setItem("ttb-c2-auth", "ok");
+          reveal();
+        } else {
+          gateError.textContent = "Wrong password, try again.";
+          gateInput.value = "";
+          gateInput.focus();
+        }
+      });
 
-/* ---- build the gallery ---- */
-const gallery = document.getElementById('gallery');
-let photoCount = 0;      // used to alternate placeholder colours
-let firstCaptionDone = false;
+      /* ---- build the gallery ---- */
+      const gallery = document.getElementById("gallery");
+      let photoCount = 0; // used to alternate placeholder colours
+      let firstCaptionDone = false;
 
-TILES.forEach(function (tile) {
-  const el = document.createElement('div');
+      TILES.forEach(function (tile) {
+        const el = document.createElement("div");
 
-  if (tile.type === 'photo') {
-    el.className = 'tile photo ' + (tile.featured ? 'featured ' : '') +
-      (photoCount % 2 === 0 ? 'grey' : 'pink');
-    photoCount++;
-    if (tile.src) {
-      const a = document.createElement('a');
-      a.href = tile.src;
-      a.target = '_blank';
-      a.rel = 'noopener';
-      const img = document.createElement('img');
-      img.src = tile.src;
-      img.alt = '';
-      a.appendChild(img);
-      el.appendChild(a);
-    }
-    gallery.appendChild(el);
-    return;
-  }
+        if (tile.type === "photo") {
+          el.className =
+            "tile photo " +
+            (tile.featured ? "featured " : "") +
+            (photoCount % 2 === 0 ? "grey" : "pink");
+          photoCount++;
+          if (tile.src) {
+            const a = document.createElement("a");
+            a.href = tile.src;
+            a.target = "_blank";
+            a.rel = "noopener";
+            const img = document.createElement("img");
+            img.src = tile.src;
+            img.alt = "";
+            a.appendChild(img);
+            el.appendChild(a);
+          }
+          gallery.appendChild(el);
+          return;
+        }
 
-  // caption tile
-  el.className = 'tile caption';
-  if (!firstCaptionDone) { el.id = 'first-caption'; firstCaptionDone = true; }
+        // caption tile
+        el.className = "tile caption";
+        if (!firstCaptionDone) {
+          el.id = "first-caption";
+          firstCaptionDone = true;
+        }
 
-  const scroll = document.createElement('div');
-  scroll.className = 'caption-scroll';
+        const scroll = document.createElement("div");
+        scroll.className = "caption-scroll";
 
-  const bar = document.createElement('div');
-  bar.className = 'copy-bar';
-  const btn = document.createElement('button');
-  btn.className = 'copy-btn';
-  btn.type = 'button';
-  btn.textContent = 'Copy';
-  bar.appendChild(btn);
+        const bar = document.createElement("div");
+        bar.className = "copy-bar";
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.type = "button";
+        btn.textContent = "Copy";
+        bar.appendChild(btn);
 
-  const text = document.createElement('p');
-  text.className = 'caption-text';
-  text.textContent = tile.text;
+        const text = document.createElement("p");
+        text.className = "caption-text";
+        text.textContent = tile.text;
 
-  scroll.appendChild(bar);
-  scroll.appendChild(text);
+        scroll.appendChild(bar);
+        scroll.appendChild(text);
 
-  if (tile.text.indexOf('[city]') !== -1) {
-    const note = document.createElement('p');
-    note.className = 'city-note';
-    note.textContent = 'Remember to swap [city] for yours.';
-    scroll.appendChild(note);
-  }
+        if (tile.text.indexOf("[city]") !== -1) {
+          const note = document.createElement("p");
+          note.className = "city-note";
+          note.textContent = "Remember to swap [city] for yours.";
+          scroll.appendChild(note);
+        }
 
-  const fade = document.createElement('div');
-  fade.className = 'fade';
+        const fade = document.createElement("div");
+        fade.className = "fade";
 
-  el.appendChild(scroll);
-  el.appendChild(fade);
-  gallery.appendChild(el);
+        el.appendChild(scroll);
+        el.appendChild(fade);
+        gallery.appendChild(el);
 
-  // copy the full caption + blank line + hashtags, whatever the scroll position
-  btn.addEventListener('click', function () {
-    const payload = tile.text + '\n\n' + HASHTAGS;
-    copyText(payload, btn);
-  });
+        // copy the full caption + blank line + hashtags, whatever the scroll position
+        btn.addEventListener("click", function () {
+          const payload = tile.text + "\n\n" + HASHTAGS;
+          copyText(payload, btn);
+        });
 
-  // hide the bottom fade once scrolled to the end
-  function updateFade() {
-    const atEnd = scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 2;
-    fade.classList.toggle('hidden', atEnd);
-  }
-  scroll.addEventListener('scroll', updateFade);
-  requestAnimationFrame(updateFade);
-});
+        // hide the bottom fade once scrolled to the end
+        function updateFade() {
+          const atEnd =
+            scroll.scrollTop + scroll.clientHeight >= scroll.scrollHeight - 2;
+          fade.classList.toggle("hidden", atEnd);
+        }
+        scroll.addEventListener("scroll", updateFade);
+        requestAnimationFrame(updateFade);
+      });
 
-/* ---- clipboard helper with a fallback ---- */
-function copyText(str, btn) {
-  function done() {
-    btn.textContent = 'Copied!';
-    btn.classList.add('copied');
-    setTimeout(function () {
-      btn.textContent = 'Copy';
-      btn.classList.remove('copied');
-    }, 1600);
-  }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(str).then(done).catch(function () { fallback(str, done); });
-  } else {
-    fallback(str, done);
-  }
-}
-function fallback(str, done) {
-  const ta = document.createElement('textarea');
-  ta.value = str;
-  ta.style.position = 'fixed';
-  ta.style.top = '-1000px';
-  document.body.appendChild(ta);
-  ta.focus();
-  ta.select();
-  try { document.execCommand('copy'); } catch (e) {}
-  document.body.removeChild(ta);
-  done();
-}
-</script>
-</body>
+      /* ---- clipboard helper with a fallback ---- */
+      function copyText(str, btn) {
+        function done() {
+          btn.textContent = "Copied!";
+          btn.classList.add("copied");
+          setTimeout(function () {
+            btn.textContent = "Copy";
+            btn.classList.remove("copied");
+          }, 1600);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard
+            .writeText(str)
+            .then(done)
+            .catch(function () {
+              fallback(str, done);
+            });
+        } else {
+          fallback(str, done);
+        }
+      }
+      function fallback(str, done) {
+        const ta = document.createElement("textarea");
+        ta.value = str;
+        ta.style.position = "fixed";
+        ta.style.top = "-1000px";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+          document.execCommand("copy");
+        } catch (e) {}
+        document.body.removeChild(ta);
+        done();
+      }
+    </script>
+  </body>
 </html>
