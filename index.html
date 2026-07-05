@@ -267,23 +267,6 @@
         .gallery {
           grid-template-columns: repeat(4, 1fr);
         }
-        /* Desktop only: a 2-wide tile on a 4-column grid can start at column 1
-           (spanning 1-2), column 2 (spanning 2-3) or column 3 (spanning 3-4).
-           Using ALL THREE starts - especially the centre one - scatters the big
-           tiles so captions never line up on one edge. Small 1x1 photos backfill
-           the gaps via grid-auto-flow: dense.
-           NB: the `.gallery` prefix raises specificity above the base
-           `.tile.caption`/`.tile.featured { grid-column: span 2 }` rules, which
-           are defined later in the sheet and would otherwise win. */
-        .gallery .tile.col-s1 {
-          grid-column: 1 / span 2;
-        }
-        .gallery .tile.col-s2 {
-          grid-column: 2 / span 2;
-        }
-        .gallery .tile.col-s3 {
-          grid-column: 3 / span 2;
-        }
       }
 
       .tile {
@@ -319,18 +302,22 @@
         grid-row: span 2;
       }
 
-      /* caption tiles: 2x2 footprint with internal scroll */
+      /* caption tiles: full-width editorial bands that break up the photo grid.
+         They span every column (1 / -1) on both the 2-col and 4-col grids, with
+         a fixed height and internal scroll. No forced column start, so they never
+         conflict with grid-auto-flow: dense. */
       .tile.caption {
-        grid-column: span 2;
-        grid-row: span 2;
+        grid-column: 1 / -1;
+        height: 300px;
         background: var(--card);
         overflow: hidden;
         /* definition comes from the cream palette + spacing, not a border */
         /* .tile already sets position: relative */
       }
-      /* The scroll area fills the tile. It is centred so short captions sit in
-         the middle of the tall tile; JS switches it to flex-start when the text
-         is too tall to fit, so the long caption scrolls from its first line. */
+      /* The scroll area fills the band. Content sits in a readable column
+         (max-width) centred horizontally; centred vertically for short captions,
+         and JS switches it to flex-start when the text is too tall to fit, so the
+         long caption scrolls from its first line. */
       .caption-scroll {
         position: absolute;
         inset: 0;
@@ -338,6 +325,7 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
+        align-items: center;
         padding: 46px 16px 44px;
       }
       .caption-scroll.is-overflowing {
@@ -369,11 +357,15 @@
         font-size: 14.5px;
         line-height: 1.5;
         margin: 0;
+        width: 100%;
+        max-width: 640px;
       }
       .city-note {
         font-size: 12px;
         color: var(--pink);
         margin-top: 12px;
+        width: 100%;
+        max-width: 640px;
       }
       /* Bottom-only fade to hint at more text. It is a ::after overlay pinned to
          the bottom of the tile with pointer-events: none, so it never touches
@@ -728,15 +720,7 @@ LFG 🚀🚀🚀`,
       /* ---- build the gallery ---- */
       const gallery = document.getElementById("gallery");
       let photoCount = 0; // used to alternate placeholder colours
-      let featuredCount = 0; // indexes into FEATURED_STARTS
-      let captionCount = 0; // indexes into CAPTION_STARTS
       let firstCaptionDone = false;
-
-      // Desktop-only start columns for the big 2x2 tiles. Spread across left (s1),
-      // centre-offset (s2) and right (s3) so nothing lines up on one edge, and no
-      // two consecutive entries repeat a start.
-      const CAPTION_STARTS = ["col-s3", "col-s1", "col-s2", "col-s3", "col-s1"];
-      const FEATURED_STARTS = ["col-s2", "col-s3", "col-s1", "col-s3", "col-s2", "col-s1"];
 
       TILES.forEach(function (tile) {
         const el = document.createElement("div");
@@ -744,11 +728,8 @@ LFG 🚀🚀🚀`,
         if (tile.type === "photo") {
           let cls = "tile photo " + (photoCount % 2 === 0 ? "grey" : "pink");
           if (tile.featured) {
-            // scatter featured photos across all three start columns
-            cls +=
-              " featured " +
-              FEATURED_STARTS[featuredCount % FEATURED_STARTS.length];
-            featuredCount++;
+            // featured photos are 2x2; grid-auto-flow: dense places them naturally
+            cls += " featured";
           }
           el.className = cls;
           photoCount++;
@@ -767,11 +748,8 @@ LFG 🚀🚀🚀`,
           return;
         }
 
-        // caption tile - scatter across all three start columns (desktop)
-        el.className =
-          "tile caption " +
-          CAPTION_STARTS[captionCount % CAPTION_STARTS.length];
-        captionCount++;
+        // caption tile - full-width editorial band (spans every column)
+        el.className = "tile caption";
         if (!firstCaptionDone) {
           el.id = "first-caption";
           firstCaptionDone = true;
