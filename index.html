@@ -390,6 +390,37 @@
         opacity: 1;
       }
 
+      /* ---------- the cohort (headshots grid) ----------
+         Uniform 3/4 portrait tiles. Count-agnostic: renders however many are in
+         window.HEADSHOTS. 2 per row on mobile, 5 per row on desktop. */
+      .headshots {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 9px;
+      }
+      @media (min-width: 641px) {
+        .headshots {
+          grid-template-columns: repeat(5, 1fr);
+        }
+      }
+      .headshot {
+        position: relative;
+        aspect-ratio: 3 / 4; /* portrait, taller than wide */
+        overflow: hidden;
+        background: var(--card);
+      }
+      .headshot a {
+        display: block;
+        width: 100%;
+        height: 100%;
+      }
+      .headshot img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* sources are 3:4, so this fits without cropping */
+      }
+
       /* ---------- keep-posting list ---------- */
       .prompts {
         list-style: none;
@@ -535,7 +566,12 @@
           Tap a photo to open it full size, then save it (long-press on mobile).
         </p>
 
-        <!-- 4. keep posting -->
+        <!-- 4. the cohort (headshots) -->
+        <h2 class="section-head">the cohort</h2>
+        <p class="section-intro">The founders of Cohort 2.</p>
+        <div id="headshots" class="headshots"></div>
+
+        <!-- 5. keep posting -->
         <h2 class="section-head">keep posting throughout the accelerator</h2>
         <ul class="prompts">
           <li>Daily diary</li>
@@ -545,7 +581,7 @@
           <li>A skit e.g. "expectations vs reality"</li>
         </ul>
 
-        <!-- 5. footer -->
+        <!-- 6. footer -->
         <footer>
           <span class="wordmark">the tech bros</span>
           <span class="fc">Cohort 2</span>
@@ -553,10 +589,13 @@
       </div>
     </main>
 
-    <!-- Generated list of photo paths: defines window.PHOTOS = ["photos/....jpg", ...].
-         Created separately; if it is missing/empty the gallery falls back to
-         cream placeholder tiles so local preview still works. -->
+    <!-- Generated lists, created separately. photos.js defines
+         window.PHOTOS = ["photos/....jpg", ...] (event photos); headshots.js
+         defines window.HEADSHOTS = ["headshots/....jpg", ...] (cohort portraits).
+         Kept separate so headshots never mix into the event-photo list. If either
+         is missing/empty the page still renders with cream placeholder tiles. -->
     <script src="photos.js"></script>
+    <script src="headshots.js"></script>
     <script>
       /* =========================================================================
    EASY TO EDIT - non-developers, change the three things below.
@@ -670,32 +709,72 @@ LFG 🚀🚀🚀`,
          Everything is generated from window.PHOTOS plus the CAPTIONS array, so
          changing the number of photos in photos.js automatically re-spaces the
          grid: captions stay evenly spread and featured bands stay distributed. */
+      // Merge two lists so the shorter one (headshots) is spread evenly through
+      // the longer one (event photos), by comparing each next item's normalised
+      // position and taking whichever stream is proportionally behind.
+      function mergeEvenly(a, b) {
+        if (!a.length) return b.slice();
+        if (!b.length) return a.slice();
+        const out = [];
+        let i = 0,
+          j = 0;
+        while (i < a.length || j < b.length) {
+          if (j >= b.length) out.push(a[i++]);
+          else if (i >= a.length) out.push(b[j++]);
+          else if ((i + 0.5) / a.length <= (j + 0.5) / b.length) out.push(a[i++]);
+          else out.push(b[j++]);
+        }
+        return out;
+      }
+
       function buildTiles() {
         const rawPhotos = Array.isArray(window.PHOTOS) ? window.PHOTOS : [];
+        const rawHeads = Array.isArray(window.HEADSHOTS) ? window.HEADSHOTS : [];
         // Fallback so local preview works with no photos.js: a set of empty
         // paths that render as the cream placeholder tiles.
-        const photoPaths =
+        const eventPaths =
           rawPhotos.length > 0 ? rawPhotos.slice() : new Array(30).fill("");
 
-        const nPhotos = photoPaths.length;
+        // Combine event photos + headshots into one square-tile stream, with the
+        // headshots interleaved evenly. Each item remembers its origin so featured
+        // full-width bands are chosen from event photos ONLY (a portrait headshot
+        // must never be stretched into a landscape band). Count-agnostic: works
+        // for however many photos or headshots the generated lists contain.
+        const combined = mergeEvenly(
+          eventPaths.map(function (s) {
+            return { src: s, headshot: false };
+          }),
+          rawHeads.map(function (s) {
+            return { src: s, headshot: true };
+          }),
+        );
+
+        const nPhotos = combined.length;
         const nCaps = CAPTIONS.length;
 
-        // Caption i (0-based) is inserted after this many photos. Splitting the
-        // photos into (nCaps + 1) even segments spreads the five captions evenly
-        // top to bottom with photos before the first and after the last.
+        // Caption i (0-based) is inserted after this many tiles. Splitting the
+        // combined set into (nCaps + 1) even segments spreads the five captions
+        // evenly top to bottom with photos before the first and after the last.
         const capAfter = [];
         for (let i = 1; i <= nCaps; i++) {
           capAfter.push(Math.round((i * nPhotos) / (nCaps + 1)));
         }
 
-        // A handful of featured full-width photo bands, spread through the list
-        // (centre of each even segment) so they don't bunch. ~1 per 12 photos.
-        const nFeatured = nPhotos >= 12 ? Math.round(nPhotos / 12) : 0;
+        // A handful of featured full-width bands, taken only from event-photo
+        // positions and spread through the list so they don't bunch.
+        const eventPositions = [];
+        combined.forEach(function (item, idx) {
+          if (!item.headshot) eventPositions.push(idx);
+        });
+        const nFeatured =
+          eventPositions.length >= 12 ? Math.round(nPhotos / 14) : 0;
         const featured = new Set();
         for (let j = 0; j < nFeatured; j++) {
-          featured.add(
-            Math.min(nPhotos - 1, Math.round(((j + 0.5) * nPhotos) / nFeatured)),
+          const at = Math.min(
+            eventPositions.length - 1,
+            Math.round(((j + 0.5) * eventPositions.length) / nFeatured),
           );
+          featured.add(eventPositions[at]);
         }
 
         const tiles = [];
@@ -703,10 +782,10 @@ LFG 🚀🚀🚀`,
         for (let p = 0; p < nPhotos; p++) {
           tiles.push({
             type: "photo",
-            src: photoPaths[p],
+            src: combined[p].src,
             featured: featured.has(p),
           });
-          // insert any caption(s) whose slot falls at or before this photo count
+          // insert any caption(s) whose slot falls at or before this tile count
           while (capIndex < nCaps && capAfter[capIndex] <= p + 1) {
             tiles.push({ type: "caption", text: CAPTIONS[capIndex] });
             capIndex++;
@@ -746,7 +825,7 @@ LFG 🚀🚀🚀`,
             const img = document.createElement("img");
             img.src = tile.src;
             img.alt = "";
-            img.loading = "lazy"; // ~63 images, so defer offscreen ones
+            img.loading = "lazy"; // many images, so defer offscreen ones
             a.appendChild(img);
             el.appendChild(a);
           }
@@ -806,6 +885,33 @@ LFG 🚀🚀🚀`,
         window.addEventListener("resize", updateState);
         requestAnimationFrame(updateState);
       });
+
+      /* ---- the cohort: headshots section ----
+         Renders every portrait in window.HEADSHOTS at a uniform 3/4 size. Falls
+         back to a few cream placeholder tiles if the list is missing/empty. */
+      (function () {
+        const container = document.getElementById("headshots");
+        const list = Array.isArray(window.HEADSHOTS) ? window.HEADSHOTS : [];
+        const items = list.length > 0 ? list : new Array(5).fill("");
+        items.forEach(function (path) {
+          const cell = document.createElement("div");
+          cell.className = "headshot";
+          if (path) {
+            // tapping opens the full image in a new tab to save
+            const a = document.createElement("a");
+            a.href = path;
+            a.target = "_blank";
+            a.rel = "noopener";
+            const img = document.createElement("img");
+            img.src = path;
+            img.alt = "";
+            img.loading = "lazy";
+            a.appendChild(img);
+            cell.appendChild(a);
+          }
+          container.appendChild(cell);
+        });
+      })();
 
       /* ---- clipboard helper with a fallback ---- */
       function copyText(str, btn) {
