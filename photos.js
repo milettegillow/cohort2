@@ -62,4 +62,10 @@ window.PHOTOS = [
   "photos/DSC_0777.JPG",
   "photos/DSC_0797.JPG",
   "photos/DSC_0806.JPG",
+  "photos/DSC_0814.JPG",
+  "photos/DSC_0817.JPG",
+  "photos/DSC_0820.JPG",
+  "photos/DSC_0831.JPG",
+  "photos/DSC_0835.JPG",
+  "photos/DSC_0838.JPG",
 ];
