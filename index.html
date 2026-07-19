@@ -567,7 +567,7 @@
         <h2 class="section-head">before you post</h2>
         <section class="checklist">
           <ul>
-            <li>Post Monday 6 July 2026</li>
+            <li>Post your announcement on Monday 6 July 2026</li>
             <li>
               Tag The Tech Bros LinkedIn page:
               <a
@@ -601,7 +601,17 @@
         <p class="section-intro">The founders of Cohort 2.</p>
         <div id="headshots" class="headshots"></div>
 
-        <!-- 5. keep posting -->
+        <!-- 5. the hacker house -->
+        <h2 class="section-head">the hacker house</h2>
+        <p class="section-intro">
+          Two weeks building together in the Norwegian mountains.
+        </p>
+        <div id="hackerhouse" class="gallery"></div>
+        <p class="hint">
+          Tap a photo to open it full size, then save it (long-press on mobile).
+        </p>
+
+        <!-- 6. keep posting -->
         <h2 class="section-head">keep posting throughout the accelerator</h2>
         <ul class="prompts">
           <li>Daily diary</li>
@@ -611,7 +621,7 @@
           <li>A skit e.g. "expectations vs reality"</li>
         </ul>
 
-        <!-- 6. footer -->
+        <!-- 7. footer -->
         <footer>
           <span class="wordmark">the tech bros</span>
           <span class="fc">Cohort 2</span>
@@ -621,11 +631,13 @@
 
     <!-- Generated lists, created separately. photos.js defines
          window.PHOTOS = ["photos/....jpg", ...] (event photos); headshots.js
-         defines window.HEADSHOTS = ["headshots/....jpg", ...] (cohort portraits).
-         Kept separate so headshots never mix into the event-photo list. If either
-         is missing/empty the page still renders with cream placeholder tiles. -->
+         defines window.HEADSHOTS = ["headshots/....jpg", ...] (cohort portraits);
+         hacker-house.js defines window.HACKERHOUSE = ["hacker-house/....jpg", ...].
+         Kept separate so none of these lists ever mix. If any is missing/empty the
+         page still renders with cream placeholder tiles. -->
     <script src="photos.js"></script>
     <script src="headshots.js"></script>
+    <script src="hacker-house.js"></script>
     <script>
       /* =========================================================================
    EASY TO EDIT - non-developers, change the three things below.
@@ -893,6 +905,35 @@ LFG 🚀🚀🚀`,
           cell.className = "headshot";
           if (path) {
             // tapping opens the full image in a new tab to save
+            const a = document.createElement("a");
+            a.href = path;
+            a.target = "_blank";
+            a.rel = "noopener";
+            const img = document.createElement("img");
+            img.src = path;
+            img.alt = "";
+            img.loading = "lazy";
+            a.appendChild(img);
+            cell.appendChild(a);
+          }
+          container.appendChild(cell);
+        });
+      })();
+
+      /* ---- the hacker house: 1x1 square photo grid ----
+         Separate list (window.HACKERHOUSE); never touches the main mosaic, the
+         caption spacing, or the Download all zip. Reuses the main gallery grid
+         (4 per row desktop, 2 mobile, square tiles). Falls back to a few cream
+         placeholder tiles if the list is missing/empty. */
+      (function () {
+        const container = document.getElementById("hackerhouse");
+        const list = Array.isArray(window.HACKERHOUSE) ? window.HACKERHOUSE : [];
+        const items = list.length > 0 ? list : new Array(8).fill("");
+        items.forEach(function (path, i) {
+          const cell = document.createElement("div");
+          cell.className = "tile photo " + (i % 2 === 0 ? "grey" : "pink");
+          if (path) {
+            // tapping opens the full uncropped image in a new tab to save
             const a = document.createElement("a");
             a.href = path;
             a.target = "_blank";
